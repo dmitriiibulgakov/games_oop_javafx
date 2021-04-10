@@ -15,13 +15,20 @@ public final class Logic {
     public void move(Cell source, Cell dest)
             throws FigureNotFoundException, ImpossibleMoveException, OccupiedCellException {
         int index = findBy(source);
-        Cell[] steps = figures[index].way(dest);
-        free(steps);
+        free(figures[index].way(dest));
         figures[index] = figures[index].copy(dest);
     }
 
-    private boolean free(Cell[] steps) throws OccupiedCellException {
-        return true;
+    private void free(Cell[] steps) throws OccupiedCellException {
+        for (Figure figure : figures) {
+            if (figure != null) {
+                for (Cell step : steps) {
+                    if (figure.position() == step) {
+                        throw new OccupiedCellException();
+                    }
+                }
+            }
+        }
     }
 
     public void clean() {
